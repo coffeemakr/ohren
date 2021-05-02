@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+<body>
+<div id="connections">
+    <ul id="array-rendering">
+        <li v-for="connection in connections">
+            {{ connection.type }} from <code>{{ connection.client_address }}:{{ connection.client_port }}</code> to <code>{{ connection.local_address}}:{{connection.local_port}}</code>:
+            <pre>{{ connection.description }}</pre>
+        </li>
+    </ul>
+</div>
+<script>
+    const Connections = {
+        data() {
+            return {
+                connections: []
+            }
+        },
+        mounted() {
+            connect(this);
+        },
+    }
+
+    Vue.createApp(Connections).mount('#connections')
+
+    function connect(connections) {
+        const ws = new WebSocket("ws://" + document.location.host + document.location.pathname + "ws");
+        ws.addEventListener("message", ev => {
+            const content = JSON.parse(ev.data);
+            console.log("message ", content);
+            console.log(connections.connections)
+            connections.connections.push(content);
+        });
+        ws.addEventListener("error", ev => {
+            console.error("error", ev)
+        });
+        ws.addEventListener("close", ev => {
+            console.error("connection closed", ev)
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+.idea/
+server/server
+*.crt
+*.pem
+*.key
+*.csr
