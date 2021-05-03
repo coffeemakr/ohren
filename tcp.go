@@ -61,11 +61,6 @@ func ProcessConnection(conn net.Conn, timeout time.Duration, responder Responder
 		log.Printf("error responding: %s\n", err)
 	}
 
-	if err := conn.Close(); err != nil {
-		log.Printf("failed to close connection: %s", err)
-	} else {
-		log.Printf("connection from %s to %s closed", conn.RemoteAddr(), conn.LocalAddr())
-	}
 	record.EndTime = time.Now()
 
 	record.Details = details
@@ -75,6 +70,11 @@ func ProcessConnection(conn net.Conn, timeout time.Duration, responder Responder
 func (h TcpListener) handleConnection(connections chan net.Conn, out chan Record) {
 	for conn := range connections {
 		out <- ProcessConnection(conn, h.Timeout, h.Responder)
+		if err := conn.Close(); err != nil {
+			log.Printf("failed to close connection: %s", err)
+		} else {
+			log.Printf("connection from %s to %s closed", conn.RemoteAddr(), conn.LocalAddr())
+		}
 	}
 }
 

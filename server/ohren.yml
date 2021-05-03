@@ -1,0 +1,6 @@
+hostname: "d.idk.li"
+responders:
+  - type: http
+    port: 8080
+  - type: dns
+    port: 8053

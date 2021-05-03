@@ -75,6 +75,9 @@ type RecordedConnection struct {
 }
 
 func (c *RecordedConnection) SetLocalAddress(addr net.Addr) {
+	if addr == nil  {
+		return
+	}
 	var err error
 	var port string
 	c.LocalAddress, port, err = net.SplitHostPort(addr.String())
@@ -89,6 +92,9 @@ func (c *RecordedConnection) SetLocalAddress(addr net.Addr) {
 }
 
 func (c *RecordedConnection) SetRemoteAddress(addr net.Addr) {
+	if addr == nil  {
+		return
+	}
 	var err error
 	var port string
 	c.RemoteAddress, port, err = net.SplitHostPort(addr.String())
